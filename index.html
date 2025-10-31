@@ -79,13 +79,14 @@
 <script>
 
 const schedule = [
+  { start: "08:50", end: "08:59", label: "학습 준비 시간", bell: "class" },
   { start: "09:00", end: "09:50", label: "정규 교육 시간", bell: "class" },
   { start: "09:50", end: "10:00", label: "쉬는시간", bell: "class" },
   { start: "10:00", end: "10:50", label: "정규 교육 시간", bell: "class" },
   { start: "10:50", end: "11:00", label: "쉬는시간", bell: "class" },
-  { start: "11:00", end: "11:50", label: "정규 교육 시간", bell: "class" },
+  { start: "11:00", end: "11:50", label: "정규 교육 시간", bell: "lunch" },
   { start: "11:50", end: "13:00", label: "점심시간", bell: "lunch" },
-  { start: "13:00", end: "13:50", label: "정규 교육 시간", bell: "lunch" },
+  { start: "13:00", end: "13:50", label: "정규 교육 시간", bell: "class" },
   { start: "13:50", end: "14:00", label: "쉬는시간", bell: "class" },
   { start: "14:00", end: "14:50", label: "정규 교육 시간", bell: "class" },
   { start: "14:50", end: "15:00", label: "쉬는시간", bell: "class" },
@@ -156,5 +157,6 @@ updateClock();
 </script>
 </body>
 </html>
+
 
 
