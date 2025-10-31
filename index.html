@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <body>
+
+<div id="title">🐣카카오테크 부트캠프🐣</div>
+<div id="date"></div>
+<div id="time"></div>
+<div id="status"></div>
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학교 종소리 시스템</title>
+<style>
+ #title {
+  font-size: 4em;
+  font-weight: bold;
+  color: #00aaff;
+  margin-bottom: 0.5em;
+}
+
+  body {
+    background-color: black;
+    color: white;
+    font-family: 'Arial Black', 'Trebuchet MS', sans-serif;
+    text-align: center;
+    margin-top: 10%;
+    font-weight: bold;
+  }
+  #date {
+    font-size: 2.5em;   /* 날짜 크기 ↑ */
+    margin-bottom: 0.7em;
+  }
+  #time {
+    font-size: 8em;     /* 시계 크기 ↑ */
+    margin-bottom: 0.4em;
+  }
+  #status {
+    font-size: 4em;     /* 기존보다 약 3pt 정도 큼 */
+    margin-bottom: 4em;
+  }
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  .bottom-left {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div id="date"></div>
+<div id="time"></div>
+<div id="status"></div>
+
+<div class="bottom-left">
+  <button onclick="playBell()">종소리</button>
+  <button onclick="setNow()">현재시간</button>
+  <button onclick="setNow()">점심시간</button>
+
+</div>
+
+<audio id="classBell" src="class_bell.mp3" preload="auto"></audio>
+<audio id="lunchBell" src="lunch_bell.mp3" preload="auto"></audio>
+
+<script>
+
+const schedule = [
+  { start: "09:00", end: "09:50", label: "정규 교육 시간", bell: "class" },
+  { start: "09:50", end: "10:00", label: "쉬는시간", bell: "class" },
+  { start: "10:00", end: "10:50", label: "정규 교육 시간", bell: "class" },
+  { start: "10:50", end: "11:00", label: "쉬는시간", bell: "class" },
+  { start: "11:00", end: "11:50", label: "정규 교육 시간", bell: "class" },
+  { start: "11:50", end: "13:00", label: "점심시간", bell: "lunch" },
+  { start: "13:00", end: "13:50", label: "정규 교육 시간", bell: "lunch" },
+  { start: "13:50", end: "14:00", label: "쉬는시간", bell: "class" },
+  { start: "14:00", end: "14:50", label: "정규 교육 시간", bell: "class" },
+  { start: "14:50", end: "15:00", label: "쉬는시간", bell: "class" },
+  { start: "15:00", end: "15:50", label: "정규 교육 시간", bell: "class" },
+  { start: "15:50", end: "16:00", label: "쉬는시간", bell: "class" },
+  { start: "16:00", end: "16:50", label: "정규 교육 시간", bell: "class" },
+  { start: "16:50", end: "17:00", label: "쉬는시간", bell: "class" },
+  { start: "17:00", end: "17:50", label: "정규 교육 시간", bell: "class" },
+  { start: "17:50", end: "24:00", label: "자율 야간 학습 시간", bell: "none" }
+];
+
+let lastPlayed = "";
+
+function updateClock() {
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
+  const timeStr = now.toLocaleTimeString('ko-KR', { hour12:false });
+  document.getElementById("date").innerText = dateStr;
+  document.getElementById("time").innerText = timeStr;
+
+  const current = now.getHours() * 60 + now.getMinutes();
+  const currentTime = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  let currentStatus = "자율 야간 학습 시간";
+  for (let i = 0; i < schedule.length; i++) {
+    const s = schedule[i];
+    const startMin = toMinutes(s.start);
+    const endMin = toMinutes(s.end);
+    if (current >= startMin && current < endMin) {
+      currentStatus = s.label;
+    }
+    // 종소리 자동 재생
+    if (currentTime === s.start && lastPlayed !== s.start) {
+      playAutoBell(s.bell);
+      lastPlayed = s.start;
+    }
+    if (currentTime === s.end && lastPlayed !== s.end) {
+      playAutoBell(s.bell);
+      lastPlayed = s.end;
+    }
+  }
+
+  document.getElementById("status").innerText = currentStatus;
+}
+
+function toMinutes(t) {
+  const [h,m] = t.split(":").map(Number);
+  return h * 60 + m;
+}
+
+function playBell() {
+  document.getElementById("classBell").play();
+}
+
+function playAutoBell(type) {
+  if (type === "lunch") document.getElementById("lunchBell").play();
+  else if (type === "class") document.getElementById("classBell").play();
+}
+
+function setNow() {
+  lastPlayed = "";
+  updateClock();
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+</script>
+</body>
+</html>
+
+
